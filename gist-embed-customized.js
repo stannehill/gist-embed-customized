@@ -15,42 +15,49 @@
             a.push(input[i]);
             u[input[i]] = 1;
         }
+
         return a;
     };
 
     // Get the line numbers that a particular chunk of gist will need
     var getLineNumbers = function (lineRangeString) {
         var lineNumbers = [],
-            lineNumberSections = lineRangeString.split(',');
+            lineNumberSections = lineRangeString.split(','),
+            range,
+            i,
+            k;
 
-        for (var k = 0; k < lineNumberSections.length; k++) {
-            var range = lineNumberSections[k].split('-');
+        for (i = 0; i < lineNumberSections.length; i++) {
+            range = lineNumberSections[i].split('-');
             if (range.length === 2) {
-                for (var i = parseInt(range[0], 10); i <= range[1]; i++) {
-                    lineNumbers.push(i);
+                for (k = parseInt(range[0], 10); k <= range[1]; k++) {
+                    lineNumbers.push(k);
                 }
             }
             else if (range.length === 1) {
                 lineNumbers.push(parseInt(range[0], 10));
             }
         }
+
         return lineNumbers;
     };
 
     // Set a range of line numbers to use
     var range = function (start, stop, step) {
+        var length, counter, range;
+
         if (arguments.length <= 1) {
             stop = start || 0;
             start = 0;
         }
         step = arguments[2] || 1;
 
-        var length = Math.max(Math.ceil((stop - start) / step), 0);
-        var idx = 0;
-        var range = new Array(length);
+        length = Math.max(Math.ceil((stop - start) / step), 0);
+        counter = 0;
+        range = new Array(length);
 
-        while (idx < length) {
-            range[idx++] = start;
+        while (counter < length) {
+            range[counter++] = start;
             start += step;
         }
 
@@ -59,8 +66,6 @@
 
     // 
     var parseGist = function (response, $elem, line) {
-        var resultdiv;
-        resultdiv = response.div;
         //the html payload is in the div property
         if (response && response.div) {
             //add the stylesheet if it does not exist
@@ -78,20 +83,32 @@
             $elem.html("<div id='" + random + "'>" + response.div + "</div>");
 
             if (line) {
+                var lineComponents,
+                    startRange, 
+                    endRange, 
+                    arraytoselect, 
+                    counter = 0,
+                    lineNumbers;
+
                 // if there is a - in the line we have a range to deal with
                 if (line.indexOf('-') !== -1) {
-                    var lineComponents = line.split('-');
-                    var startRange = parseInt(lineComponents[0], 10);
-                    var endRange = parseInt(lineComponents[1] + 1, 10);
+                    lineComponents = line.split('-');
+                    startRange = parseInt(lineComponents[0], 10);
+                    endRange = parseInt(lineComponents[1] + 1, 10);
 
                     if (startRange <= 0) {
                         startRange = 1;
                         console.log("No zero based start for you (it's a feature)!");
                     }
-                    var arraytoselect = range(startRange, endRange);
-                    var counter = 0;
+                    arraytoselect = range(startRange, endRange);
                 }
-                var lineNumbers = getLineNumbers(line);
+
+                if(line.indexOf(',') !== -1) {
+                    lineComponents = line.split(',');
+                    arraytoselect = lineComponents;
+                }
+
+                lineNumbers = getLineNumbers(line);
                 $('#' + random).find('.line').each(function (index) {
                     if (($.inArray(index + 1, lineNumbers)) === -1) {
                         $(this).remove();
@@ -112,6 +129,7 @@
                         }
                     }
                 });
+                console.log('done');
             }
             if ($elem.attr('data-showFooter') && $elem.attr('data-showFooter') === "false") {
                 $('#' + random).find('.gist-meta').remove();
