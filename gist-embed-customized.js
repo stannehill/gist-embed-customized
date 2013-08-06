@@ -64,7 +64,7 @@
         return range;
     };
 
-    // 
+    // Parse the retrieved gist, removing uneeded lines and setting line numbers appropriately
     var parseGist = function (response, $elem, line) {
         //the html payload is in the div property
         if (response && response.div) {
@@ -115,7 +115,6 @@
                     }
                 });
 
-                //var lineNumber = 1;
                 $('#' + random).find('.line-number').each(function (index) {
                     if (($.inArray(index + 1, lineNumbers)) === -1) {
                         $(this).remove();
@@ -145,24 +144,22 @@
     };
 
     $(function () {
-
-
         var gistMarkerId = 'gist-',
-            retrievedGists = [],
+            gistCodeBlocks = [],
             uniqueGists,
             url,
-            gotbacks = {},
-            ic = 0;
+            retrievedGist = {},
+            i = 0;
 
 
         // Get each instance of a gist marker in the DOM
         $('code[id*="' + gistMarkerId + '"]').each(function () {
-            retrievedGists.push($(this).attr('id'));
+            gistCodeBlocks.push($(this).attr('id'));
         });
 
 
         // Reduce the collection of gist markers. get rid of duplicates 
-        uniqueGists = getUnique(retrievedGists);
+        uniqueGists = getUnique(gistCodeBlocks);
 
 
         // Iterate over each gist. Handle parsing it in the ajax success callback
@@ -174,7 +171,7 @@
             // Appending ?callback=? makes the reaust JSONP and nullifys same origin policy issues
             url = 'https://gist.github.com/' + strippedId + '.json?callback=?';
             $.getJSON(url,function (data) {
-                gotbacks[ic] = data;
+                retrievedGist[i] = data;
 
                 //find all code elements containing "gist-" the id attribute.
                 $('code[id*="' + gistMarkerId + '"]').each(function () {
@@ -210,16 +207,16 @@
 
                         //make sure result is a numeric id
                         if (!isNaN(parseInt(id, 10))) {
-                            parseGist(gotbacks[ic], $elem, line);
+                            parseGist(retrievedGist[i], $elem, line);
                         }
                     }
                 });
 
-                ic++;
+                i++;
 
             }).fail(function (jqXHR) {
                     // Some failed ajax request error logging
-                    console.log('There was an error retriving a gist.');
+                    console.log('There was an error retrieving a gist.');
                     console.log(jqXHR);
                 });
         });
