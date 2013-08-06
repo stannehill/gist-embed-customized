@@ -2,17 +2,24 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Gist Embed Test</title>
+	<title>Gist Embed Customized</title>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="gist-embed-customized.js"></script>
 </head>
 <body>
+<h1>Embed Gists and Preserve Line Numbering in Extracted Chunks</h1>
+<p>This page provides examples of gists being used in their entirety (the standard gist embed behavior) and being used in chunks. Other gist enbed script do this but they tend to make a single ajax request each time a gist is referenced (resulting in, say 5 requests of the same gist) and/or they don't offer to preserve line numbering (meaning that the chunk you are referencing is renumbered from line 1). This script preserves line numbering (great for referencing specific portions of the main gist) and only makes one ajax request per gist. Enjoy!</p>
+<h3>Here is an example of an entire gist:</h3>
+<code id="gist-6104937"></code>
+
+<h3>And here are examples of portions of that gist being reused to display specific sections of code from that entire gist (each gist is retrieved once, to avoid the overhead that other gist embed scripts introduce when they make an new ajax call for each instance of the same gist.)</h3>
 <code id="gist-6104937" data-line="9-12"></code>
 <code id="gist-6104937" data-line="11-20"></code>
 <code id="gist-6104937" data-line="1-5"></code>
 <code id="gist-6104937" data-line="17-24"></code>
 <code id="gist-6104937" data-line="21-30"></code>
 
+<h3>And here are portions of a second gist:</h3>
 <code id="gist-6105050" data-line="1-5"></code>
 <code id="gist-6105050" data-line="8-15"></code>
 <code id="gist-6105050" data-line="10-25"></code>
