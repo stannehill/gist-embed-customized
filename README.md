@@ -6,6 +6,7 @@ Embed gists, then reuse portions of them preserving their original line numbers 
 For example, 
 
 1. Include jQuery and then this script in your page.
-2. Put the following in your page: <code id="gist-6104937" data-line="9-12"></code>
+2. Put the following in your page: 
+    <code id="gist-6104937" data-line="9-12"></code>
 3. ???
 4. Profit!
