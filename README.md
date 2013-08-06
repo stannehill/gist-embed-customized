@@ -3,19 +3,21 @@ gist-embed-customized
 
 Embed gists, then reuse portions of them preserving their original line numbers (also, only retrieves each gist once... reusing it for additional references in your page).
 
-In your html:
+First, include jQuery then the gist-embed-customized.js file.
 
-To display a full gist
+Next, in your html...
+
+To display a full gist:
 ```html
 <code id="gist-6104937"></code>
 ```
 
-To display a range of lines from a gist
+To display a range of lines from a gist:
 ```html
 <code id="gist-6104937" data-line="11-20"></code>
 ```
 
-To display a discrete selection of lines from a gist
+To display a discrete selection of lines from a gist:
 ```html
 <code id="gist-6104937" data-line="5,10,14"></code>
 ```
