@@ -64,7 +64,7 @@
         return range;
     };
 
-    // Parse the retrieved gist, removing uneeded lines and setting line numbers appropriately
+    // Parse the retrieved gist, removing unneeded lines and setting line numbers appropriately
     var parseGist = function (response, $elem, line) {
         //the html payload is in the div property
         if (response && response.div) {
