@@ -4,6 +4,9 @@
 (function ($) {
     "use strict";
 
+    // Function definitions
+    // ====================
+
     // Reduce an array to its unique components
     var getUnique = function (input) {
         var u = {}, a = [], inputlength = input.length, i;
@@ -103,6 +106,7 @@
                     arraytoselect = range(startRange, endRange);
                 }
 
+                // if there us a , in the line we have a discrete selection to deal with
                 if(line.indexOf(',') !== -1) {
                     lineComponents = line.split(',');
                     arraytoselect = lineComponents;
@@ -128,7 +132,6 @@
                         }
                     }
                 });
-                console.log('done');
             }
             if ($elem.attr('data-showFooter') && $elem.attr('data-showFooter') === "false") {
                 $('#' + random).find('.gist-meta').remove();
@@ -142,6 +145,11 @@
             $elem.html('Failed loading gist');
         }
     };
+    // End function definitions
+
+
+    // jQuery DOM ready
+    // ================
 
     $(function () {
         var gistMarkerId = 'gist-',
@@ -157,42 +165,40 @@
             gistCodeBlocks.push($(this).attr('id'));
         });
 
-
         // Reduce the collection of gist markers. get rid of duplicates 
         uniqueGists = getUnique(gistCodeBlocks);
-
 
         // Iterate over each gist. Handle parsing it in the ajax success callback
         $.each(uniqueGists, function () {
 
-            var strippedId = this.replace(gistMarkerId, '');
+            // Strip off the "gist-" prefix and make certain we have an integer to pass to the JSON request
+            var strippedId = parseInt(this.replace(gistMarkerId, ''), 10);
 
-            //make ajax call and have success handle the details
-            // Appending ?callback=? makes the reaust JSONP and nullifys same origin policy issues
+            // Make ajax call and have success callback handle the details
+            // Appending ?callback=? makes the request JSONP and nullifies same origin policy issues
             url = 'https://gist.github.com/' + strippedId + '.json?callback=?';
             $.getJSON(url,function (data) {
                 retrievedGist[i] = data;
 
-                //find all code elements containing "gist-" the id attribute.
+                //find all code elements containing "gist-" in the id attribute.
                 $('code[id*="' + gistMarkerId + '"]').each(function () {
 
                     var $elem = $(this),
                         id,
-                        file,
+                        //file,
                         line,
                         data = {};
 
                     id = $elem.attr('id') || '';
-                    file = $elem.attr('data-file');
+                    //file = $elem.attr('data-file');
                     line = $elem.attr('data-line');
 
                     if (id === (gistMarkerId + strippedId)) {
 
-
-                        if (file) {
+                        /*if (file) {
                             data.file = file;
                             //splittedFileName = file.split('.').join('-');
-                        }
+                        }*/
 
                         //if the id doesn't begin with 'gist-', then ignore the code block
                         if (!id || id.indexOf('gist-') !== 0) {
